@@ -14,7 +14,19 @@ class ConvPurchaseTransaction extends ConvTransaction
     /**
      * @var bool
      */
+    protected bool $sharedOwnership = false;
+    /**
+     * @var bool
+     */
+    protected bool $helpToBuy = false;
+    /**
+     * @var bool
+     */
     protected bool $higherSdltRate = false;
+    /**
+     * @var bool
+     */
+    protected bool $newBuild = false;
     /**
      * See ConvTaxRegionType
      *
@@ -84,6 +96,9 @@ class ConvPurchaseTransaction extends ConvTransaction
     {
         $result = parent::jsonSerialize();
         $this->testAndRemove($result, [
+            "sharedOwnership",
+            "helpToBuy",
+            "newBuild",
             "memorandumReceived",
             "enquiriesRaised",
             "contractReceived",
@@ -325,4 +340,53 @@ class ConvPurchaseTransaction extends ConvTransaction
     {
         $this->exchanged = $exchanged;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSharedOwnership(): bool
+    {
+        return $this->sharedOwnership;
+    }
+
+    /**
+     * @param bool $sharedOwnership
+     */
+    public function setSharedOwnership(bool $sharedOwnership): void
+    {
+        $this->sharedOwnership = $sharedOwnership;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHelpToBuy(): bool
+    {
+        return $this->helpToBuy;
+    }
+
+    /**
+     * @param bool $helpToBuy
+     */
+    public function setHelpToBuy(bool $helpToBuy): void
+    {
+        $this->helpToBuy = $helpToBuy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewBuild(): bool
+    {
+        return $this->newBuild;
+    }
+
+    /**
+     * @param bool $newBuild
+     */
+    public function setNewBuild(bool $newBuild): void
+    {
+        $this->newBuild = $newBuild;
+    }
+
 }
