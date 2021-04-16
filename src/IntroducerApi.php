@@ -10,41 +10,22 @@ use conveylaw\PortalIntegration\Logic\HttpStatusCodes;
 
 class IntroducerApi
 {
-    /**
-     * @var
-     */
+    private static ?IntroducerApi $instance = null;
+    private IntroducerApiOptions $options;
     protected $curl;
-    /**
-     * @var string
-     */
-    protected string $apiKey;
-    /**
-     * @var bool
-     */
-    protected bool $ssl;
-    /**
-     * @var string
-     */
-    protected string $hostname = "portal-ned.convey365.com";
-    /**
-     * @var int
-     */
-    protected int $port = 443;
-    /**
-     * @var string
-     */
-    protected string $basePath = "/";
 
-    public function __construct($apiKey, $ssl = true, )
+    private function __construct(IntroducerApiOptions $options)
     {
+        $this->options = $options;
         $this->curl = curl_init();
-        $this->apiKey = $apiKey;
     }
 
-    protected function generatePath($apiMethod): string
+    public static function getInstance(IntroducerApiOptions $options): IntroducerApi
     {
-        return "http" . ($this->ssl ? "s" : "") . "://" .
-            $this->hostname . ":" . $this->port . $this->basePath . $apiMethod;
+        if (is_null(self::$instance)) {
+            self::$instance = new IntroducerApi($options);
+        }
+        return self::$instance;
     }
 
     /**
@@ -57,11 +38,11 @@ class IntroducerApi
      * @return mixed
      * @throws ApiException
      */
-    public function call(string $method, string $action = "GET", array $data = null)
+    public function call(string $method, string $action = "GET", $data = null)
     {
-        print_r($this->generatePath($method));
+        print_r($this->options->generatePath($method));
         $options = [
-            CURLOPT_URL => $this->generatePath($method),
+            CURLOPT_URL => $this->options->generatePath($method),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 5,
             CURLOPT_HTTPHEADER => [
@@ -69,7 +50,7 @@ class IntroducerApi
                 'Content-Type: application/json'
             ],
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_USERPWD => "api:" . $this->apiKey
+            CURLOPT_USERPWD => "api:" . $this->options->getApiKey()
         ];
 
         if ($action == "POST") {
@@ -131,9 +112,9 @@ class IntroducerApi
      * @return object|array
      * @throws ApiException
      */
-    protected function jsonValidate($jsonString, $asArray)
+    protected function jsonValidate($jsonString)
     {
-        $json = json_decode($jsonString, $asArray);
+        $json = json_decode($jsonString, true);
 
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new ApiException(json_last_error_msg(), json_last_error());
@@ -153,20 +134,12 @@ class IntroducerApi
             $_import = new ConvApiImport();
             $_import->setImports($convApiObjectsArray);
             $result = new ConvApiImportResult();
-            $result->fromJson($this->call('api/introducer/imports/matter.json', $_import));
+            $result->fromJson($this->call('api/introducer/imports/matter.json', "POST", json_encode($_import)));
             return $result->getMatterReference();
         } else {
             throw new ApiException("matterDetailsArray must be an array of ConvApiObjects", 500);
         }
     }
-
-    /**
-     * @param array $convApiObjectsArray
-     */
-    public function importCaseUpdate(array $convApiObjectsArray): void
-{
-
-}
 
     /**
      * @return ConvApiExport
@@ -198,5 +171,4 @@ class IntroducerApi
     {
         $this->call('api/introducer/exports/' . $exportId . '/confirm.json', "POST");
     }
-
 }

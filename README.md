@@ -15,7 +15,8 @@ $ composer require conveylaw/PortalIntegration
 ## Usage
 
 ``` php
-$api = new conveylaw\PortalIntegration($YOUR_PRIVATE_FIRM_API_KEY);
+$options = new conveylaw\IntroducerApiOptions($YOUR_PRIVATE_FIRM_API_KEY);
+$api = conveylaw\PortalIntegration::getInstance($options);
 
 // If you have been assigned any cases outside of the API you can query for them using this call
 $convApiExportNewCases = $api->listInstructedMatters();
@@ -37,7 +38,7 @@ $matter = new ConvSaleTransaction();
 $matter->setIntroducerReference("YOUR_REF");
 $address = new ConvAddress();
 $address->setProperty("34");
-$address->setStreet("Stow Hill")
+$address->setStreet("Stow Hill");
 $address->setTown("Newport");
 $address->setPostcode("NP20 1JE");
 $matter->setAddress($address);
@@ -50,7 +51,7 @@ $client = new ConvClient();
 $client->setIntroducerReference("YOUR_REF");
 $clientAddress = new ConvAddress();
 $clientAddress->setProperty("34");
-$clientAddress->setStreet("Stow Hill")
+$clientAddress->setStreet("Stow Hill");
 $clientAddress->setTown("Newport");
 $clientAddress->setPostcode("NP20 1JE");
 $client->setAddress($clientAddress);
@@ -67,7 +68,7 @@ $note->setIntroducerReference("YOUR_REF");
 $note->setAuthor("Bob Jones");
 $note->setNote("This is a test note");
 $note->setTransactionType(ConvTransactionType::SALE);
-array_push(convApiObjectsArray, $note);
+array_push($convApiObjectsArray, $note);
 
 $matterRef = $api->importCase($convApiObjectsArray);
 //store the returned matter reference

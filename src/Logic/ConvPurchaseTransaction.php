@@ -1,7 +1,8 @@
 <?php
 namespace conveylaw\PortalIntegration\Logic;
 
-class ConvPurchaseTransaction extends ConvTransaction {
+class ConvPurchaseTransaction extends ConvTransaction
+{
     /**
      * @var bool
      */
@@ -324,5 +325,4 @@ class ConvPurchaseTransaction extends ConvTransaction {
     {
         $this->exchanged = $exchanged;
     }
-
 }

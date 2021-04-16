@@ -1,6 +1,7 @@
 <?php
 
 namespace conveylaw\PortalIntegration\Logic;
+
 class ConvFormType
 {
     public const ID_DETAILS = "ID_DETAILS";

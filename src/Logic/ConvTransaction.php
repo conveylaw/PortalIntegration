@@ -145,7 +145,8 @@ abstract class ConvTransaction extends AbstractBaseJsonSerializable implements C
     public function jsonSerialize(): array
     {
         $result = parent::jsonSerialize();
-        $this->testAndRemove($result,
+        $this->testAndRemove(
+            $result,
             ["onlineWelcomePack",
                 "intoAbeyance",
                 "outOfAbeyance",
@@ -159,7 +160,8 @@ abstract class ConvTransaction extends AbstractBaseJsonSerializable implements C
                 "completed",
                 "aborted",
                 "abortReason",
-                "approvalFee"]);
+            "approvalFee"]
+        );
         $result["convApiObjectType"] = $this->getConvApiObjectType();
         return $result;
     }
@@ -168,7 +170,7 @@ abstract class ConvTransaction extends AbstractBaseJsonSerializable implements C
     {
         if (is_string($keys)) {
             testAndRemove($array, [$keys]);
-        } else if (is_array($keys)) {
+        } elseif (is_array($keys)) {
             foreach ($keys as $key) {
                 if ((property_exists($this, $key)) && (is_null($this->{$key}))) {
                     unset($array[$key]);
@@ -186,21 +188,21 @@ abstract class ConvTransaction extends AbstractBaseJsonSerializable implements C
     {
         if (is_string($jsonValue)) {
             $this->fromJson(json_decode($jsonValue, true));
-        } else if (is_object($jsonValue)) {
+        } elseif (is_object($jsonValue)) {
             $this->fromJson(get_object_vars($jsonValue));
-        } else if (is_array($jsonValue)) {
+        } elseif (is_array($jsonValue)) {
             foreach ($jsonValue as $key => $value) {
                 if ((property_exists($this, $key)) && ($key != "convApiObjectType")) {
                     if ($key == "address") {
                         $this->address = new ConvAddress();
                         $this->address->fromJson($value);
-                    } else if ($key == "conveyancer") {
+                    } elseif ($key == "conveyancer") {
                         $this->conveyancer = new ConvContact();
                         $this->conveyancer->fromJson($value);
-                    } else if ($key == "introducer") {
+                    } elseif ($key == "introducer") {
                         $this->introducer = new ConvContact();
                         $this->introducer->fromJson($value);
-                    } else if ($key == "agent") {
+                    } elseif ($key == "agent") {
                         $this->agent = new ConvAgent();
                         $this->agent->fromJson($value);
                     } else {
@@ -611,6 +613,4 @@ abstract class ConvTransaction extends AbstractBaseJsonSerializable implements C
     {
         $this->approvalFee = $approvalFee;
     }
-
-
 }

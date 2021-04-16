@@ -7,9 +7,6 @@ namespace conveylaw\PortalIntegration;
 use conveylaw\PortalIntegration\Logic\ConvAddress;
 use conveylaw\PortalIntegration\Logic\ConvAgent;
 use conveylaw\PortalIntegration\Logic\ConvApiExport;
-use conveylaw\PortalIntegration\Logic\ConvApiObjectFactory;
-use conveylaw\PortalIntegration\Logic\ConvChecklist;
-use conveylaw\PortalIntegration\Logic\ConvChecklistType;
 use conveylaw\PortalIntegration\Logic\ConvClient;
 use conveylaw\PortalIntegration\Logic\ConvContact;
 use conveylaw\PortalIntegration\Logic\ConvDate;
@@ -109,16 +106,75 @@ class ExampleTest extends TestCase
 
     public function testListInstructedCases()
     {
-        $api = new IntroducerApi("FPRI-93e093bf-c5c7-4db9-b344-c21549b51c83-ba9cbc5d-0601-4a50-bcf3-6777fcf599dc");
+        $api = IntroducerApi::getInstance(
+            new IntroducerApiOptions(
+                "YOUR_PRIVATE_API_KEY",
+                "portal-ned.convey365.com"
+            )
+        );
         $response = $api->listInstructedCases();
         $this->assertEquals($response->getSystemId(), null);
     }
 
     public function testListCaseUpdates()
     {
-        $api = new IntroducerApi("FPRI-93e093bf-c5c7-4db9-b344-c21549b51c83-ba9cbc5d-0601-4a50-bcf3-6777fcf599dc");
+        $api = IntroducerApi::getInstance(
+            new IntroducerApiOptions(
+                "YOUR_PRIVATE_API_KEY",
+                "portal-ned.convey365.com"
+            )
+        );
         $response = $api->listCaseUpdates();
         $this->assertEquals($response->getSystemId(), null);
+    }
+
+    public function testCreateCase()
+    {
+        $api = IntroducerApi::getInstance(
+            new IntroducerApiOptions(
+                "YOUR_PRIVATE_API_KEY",
+                "portal-ned.convey365.com"
+            )
+        );
+        $introducerRef = "TEST123";
+        $convApiObjectsArray = [];
+        $matter = new ConvSaleTransaction();
+        $matter->setIntroducerReference($introducerRef);
+        $address = new ConvAddress();
+        $address->setProperty("34");
+        $address->setStreet("Stow Hill");
+        $address->setTown("Newport");
+        $address->setPostcode("NP20 1JE");
+        $matter->setAddress($address);
+        $matter->setAmount(120000);
+        $matter->setTenure(ConvTenureType::FREEHOLD);
+        $matter->setMortgage(true);
+        array_push($convApiObjectsArray, $matter);
+
+        $client = new ConvClient();
+        $client->setIntroducerReference($introducerRef);
+        $clientAddress = new ConvAddress();
+        $clientAddress->setProperty("34");
+        $clientAddress->setStreet("Stow Hill");
+        $clientAddress->setTown("Newport");
+        $clientAddress->setPostcode("NP20 1JE");
+        $client->setAddress($clientAddress);
+        $client->setTitle("Mr");
+        $client->setForename("Test");
+        $client->setSurname("Client");
+        $client->setTelephone("Telephone");
+        $client->setEmail("test@testington.com");
+        $client->setMobile("07123456789");
+        array_push($convApiObjectsArray, $client);
+
+        $note = new ConvNote();
+        $note->setIntroducerReference($introducerRef);
+        $note->setAuthor("Bob Jones");
+        $note->setNote("This is a test note");
+        $note->setTransactionType(ConvTransactionType::SALE);
+        array_push($convApiObjectsArray, $note);
+
+        $matterRef = $api->importCase($convApiObjectsArray);
     }
 
     private function mockConvAddress(): ConvAddress
@@ -144,8 +200,11 @@ class ExampleTest extends TestCase
         return $agent;
     }
 
-    private function mockConvClient($matterRef = "MatRef", $conveyancerRef = "ConRef", $introducerRef = "IntRef"): ConvClient
-    {
+    private function mockConvClient(
+        $matterRef = "MatRef",
+        $conveyancerRef = "ConRef",
+        $introducerRef = "IntRef"
+    ): ConvClient {
         $client = new ConvClient();
         $client->setMatterReference($matterRef);
         $client->setConveyancerReference($conveyancerRef);
@@ -182,8 +241,11 @@ class ExampleTest extends TestCase
         return $date;
     }
 
-    private function mockConvDocument($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvDocument
-    {
+    private function mockConvDocument(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvDocument {
         $doc = new ConvDocument();
         $doc->setMatterReference($matterRef);
         $doc->setIntroducerReference($introducerRef);
@@ -201,8 +263,11 @@ class ExampleTest extends TestCase
         return $doc;
     }
 
-    private function mockConvEstimate($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvEstimate
-    {
+    private function mockConvEstimate(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvEstimate {
         $est = new ConvEstimate();
         $est->setCreated("2021-04-15T12:15:45");
         $est->setMatterReference($matterRef);
@@ -245,8 +310,11 @@ class ExampleTest extends TestCase
         return $fee;
     }
 
-    private function mockConvFeedback($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvFeedback
-    {
+    private function mockConvFeedback(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvFeedback {
         $fdb = new ConvFeedback();
         $fdb->setTransactionType(ConvTransactionType::SALE);
         $fdb->setMatterReference($matterRef);
@@ -272,8 +340,11 @@ class ExampleTest extends TestCase
         return $fdb;
     }
 
-    private function mockConvNote($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvNote
-    {
+    private function mockConvNote(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvNote {
         $note = new ConvNote();
         $note->setMatterReference($matterRef);
         $note->setConveyancerReference($conveyancerRef);
@@ -285,8 +356,11 @@ class ExampleTest extends TestCase
         return $note;
     }
 
-    private function mockConvPurchaseTransaction($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvPurchaseTransaction
-    {
+    private function mockConvPurchaseTransaction(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvPurchaseTransaction {
         $pt = new ConvPurchaseTransaction();
         $pt->setMatterReference($matterRef);
         $pt->setConveyancerReference($conveyancerRef);
@@ -308,8 +382,11 @@ class ExampleTest extends TestCase
         return $pt;
     }
 
-    private function mockConvSaleTransaction($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvSaleTransaction
-    {
+    private function mockConvSaleTransaction(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvSaleTransaction {
         $st = new ConvSaleTransaction();
         $st->setMatterReference($matterRef);
         $st->setConveyancerReference($conveyancerRef);
@@ -328,8 +405,11 @@ class ExampleTest extends TestCase
         return $st;
     }
 
-    private function mockConvRemoTransaction($matterRef = "MatRef", $introducerRef = "IntRef", $conveyancerRef = "ConRef"): ConvRemortgageTransaction
-    {
+    private function mockConvRemoTransaction(
+        $matterRef = "MatRef",
+        $introducerRef = "IntRef",
+        $conveyancerRef = "ConRef"
+    ): ConvRemortgageTransaction {
         $rt = new ConvRemortgageTransaction();
         $rt->setMatterReference($matterRef);
         $rt->setConveyancerReference($conveyancerRef);

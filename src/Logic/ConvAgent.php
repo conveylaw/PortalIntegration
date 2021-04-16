@@ -38,17 +38,17 @@ class ConvAgent extends AbstractBaseJsonSerializable
      */
     public function fromJson($jsonValue): ConvAgent
     {
-        if(is_string($jsonValue)) {
+        if (is_string($jsonValue)) {
             $this->fromJson(json_decode($jsonValue, true));
-        }else if(is_object($jsonValue)) {
+        } elseif (is_object($jsonValue)) {
             $this->fromJson(get_object_vars($jsonValue));
-        }else if(is_array($jsonValue)) {
+        } elseif (is_array($jsonValue)) {
             foreach ($jsonValue as $key => $value) {
                 if (property_exists($this, $key)) {
-                    if($key == "address") {
+                    if ($key == "address") {
                         $this->address = new ConvAddress();
                         $this->address->fromJson($value);
-                    }else {
+                    } else {
                         $this->{$key} = $value;
                     }
                 }

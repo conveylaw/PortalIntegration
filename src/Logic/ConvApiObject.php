@@ -17,5 +17,4 @@ interface ConvApiObject
      * @return void
      */
     public function fromJson($jsonValue): ConvApiObject;
-
 }

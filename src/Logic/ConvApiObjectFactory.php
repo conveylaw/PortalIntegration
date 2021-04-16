@@ -13,9 +13,9 @@ class ConvApiObjectFactory
         $results = [];
         if (is_string($jsonValue)) {
             self::parseArrayOfConvApiObjects(json_decode($jsonValue, true));
-        } else if (is_object($jsonValue)) {
+        } elseif (is_object($jsonValue)) {
             self::parseArrayOfConvApiObjects(get_object_vars($jsonValue));
-        } else if (is_array($jsonValue)) {
+        } elseif (is_array($jsonValue)) {
             foreach ($jsonValue as $key => $value) {
                 $type = self::extractConvApiObjectType($value);
                 switch ($type) {
@@ -89,9 +89,9 @@ class ConvApiObjectFactory
     {
         if (is_string($jsonValue)) {
             return self::extractConvApiObjectType(json_decode($jsonValue, true));
-        } else if (is_object($jsonValue)) {
+        } elseif (is_object($jsonValue)) {
             return self::extractConvApiObjectType(get_object_vars($jsonValue));
-        } else if (is_array($jsonValue)) {
+        } elseif (is_array($jsonValue)) {
             foreach ($jsonValue as $key => $value) {
                 if (($key == "convApiObjectType") && (is_string($value))) {
                     return $value;

@@ -2,7 +2,8 @@
 
 namespace conveylaw\PortalIntegration\Logic;
 
-class ConvSaleTransaction extends ConvTransaction {
+class ConvSaleTransaction extends ConvTransaction
+{
     /**
      * @var bool
      */
@@ -206,5 +207,4 @@ class ConvSaleTransaction extends ConvTransaction {
     {
         $this->exchanged = $exchanged;
     }
-
 }

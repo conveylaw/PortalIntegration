@@ -2,7 +2,8 @@
 
 namespace conveylaw\PortalIntegration\Logic;
 
-class ConvRemortgageTransaction extends ConvTransaction {
+class ConvRemortgageTransaction extends ConvTransaction
+{
     /**
      * @var bool
      */
@@ -39,7 +40,7 @@ class ConvRemortgageTransaction extends ConvTransaction {
     public function jsonSerialize(): array
     {
         $result = parent::jsonSerialize();
-        $this->testAndRemove($result,[
+        $this->testAndRemove($result, [
             "officeCopiesReceived",
             "redemptionStatementReceived",
             "mortgageOfferReceived",

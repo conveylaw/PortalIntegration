@@ -66,9 +66,9 @@ class ConvLender extends AbstractBaseJsonSerializable
     {
         if (is_string($jsonValue)) {
             $this->fromJson(json_decode($jsonValue, true));
-        } else if (is_object($jsonValue)) {
+        } elseif (is_object($jsonValue)) {
             $this->fromJson(get_object_vars($jsonValue));
-        } else if (is_array($jsonValue)) {
+        } elseif (is_array($jsonValue)) {
             foreach ($jsonValue as $key => $value) {
                 if (property_exists($this, $key)) {
                     if ($key == "address") {
@@ -258,5 +258,4 @@ class ConvLender extends AbstractBaseJsonSerializable
     {
         $this->notes = $notes;
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace conveylaw\PortalIntegration\Logic;
+
 class ConvTaxRegionType
 {
     public const ENGLAND = "ENGLAND";
