@@ -1,22 +1,14 @@
 # Changelog
 
-All notable changes to `PortalIntegration` will be documented in this file.
-
-Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
-
-## NEXT - YYYY-MM-DD
+## 2021-05-20
 
 ### Added
 - Nothing
-
 ### Deprecated
 - Nothing
-
 ### Fixed
-- Nothing
-
+- Reference to method listInstructedMatters in the readme changed to listInstructedCases
 ### Removed
 - Nothing
-
 ### Security
 - Nothing

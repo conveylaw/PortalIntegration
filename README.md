@@ -12,6 +12,12 @@ Via Composer
 $ composer require conveylaw/PortalIntegration
 ```
 
+You may need to configure the autoload if you haven't already:
+
+``` php
+require_once('vendor/autoload.php');
+```
+
 ## Usage
 
 ``` php
@@ -19,7 +25,7 @@ $options = new conveylaw\IntroducerApiOptions($YOUR_PRIVATE_FIRM_API_KEY);
 $api = conveylaw\PortalIntegration::getInstance($options);
 
 // If you have been assigned any cases outside of the API you can query for them using this call
-$convApiExportNewCases = $api->listInstructedMatters();
+$convApiExportNewCases = $api->listInstructedCases();
 if(!empty($convApiExportNewCases->getExports())) {
     // Import the cases
     $api->confirm($convApiExportNewCases->exportId);
